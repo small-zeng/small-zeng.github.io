@@ -106,43 +106,86 @@
             <h2 class="grey-heading_nerf">
                 Method
             </h2>
-            <!-- <p class="paragraph-3 nerf_text">
-                We factorize radiance fields into compact components for scene modeling.
-                To doso, we apply both the classic CP decomposition and a new vector-matrix (VM) decomposition; both are illustrated in following figure:
-            </p>
-            <div class="columns-5 w-row">
-                <img src="img/tensor_factorizationpng.png" style="width:95%; margin-right:0px; margin-top:0px;">
-            </div>
             <p class="paragraph-3 nerf_text">
-                Left: CP decomposition, which factorizes atensor as a sum of vector outer products.
-                Right: our vector-matrix decomposition, which factorizes a tensor as a sum of vector-matrix outer products.
-                Please refer to our paper for more decomposition derails.
+                The problem considered is to generate a trajectory for a robot that yields high-quality 3D models of a bounded 
+                target scene and fulfills robot constraints like time and path length. However, finding
+                the best sequence of viewpoints is time-consuming and prohibitively expensive. We adopt the
+                greedy strategy and trade it as a Next-Best-View (NBV)
+                problem. At each step of the reconstruction, the information
+                gain of viewpoints within a certain range of the current
+                position of a robot are evaluated based on the partial reconstruction
+                scene. An informative path considering both the
+                information gain and the path length is then planned and
+                executed. Images captured along the view path are selected
+                and are fed into the 3D reconstruction of next step. The
+                process is repeated until some critera are met.
+            </p>
+   
+            <p class="paragraph-3 nerf_text">
+                Under the greedy strategy, our pipeline consists of three
+                components: a Mobile Robot module, a 3D Reconstruction
+                module and a View Path Planning module and shown as below: 
+                
             </p>
 
-
             <div class="columns-5 w-row">
-                <img src="img/pipeline.png" style="width:95%; margin-right:0px; margin-top:10px;">
+                <img src="img/overview.png" style="width:95%; margin-right:0px; margin-top:0px;">
             </div>
-
+            
             <p class="paragraph-3 nerf_text">
-                We now present our TensoRF representation and reconstruction. For each shading location <b>x</b> = (x,y,z), we use linearly/bilinearly sampled values from the vector (<b>v</b>)/matrix (<b>M</b>) factors to compute the corresponding trilinearly interpolated values of the tensor components.
-                The density component values (A<sub>σ</sub>(x)) are summed to get the volume density directly (σ).
-                The appearance values (A<sub>c</sub>(x)) are concatenated into a vector (⊕[A<sub>c</sub><sup style="margin-left:-8px">m</sup>(x)]<sub>m</sub>) that is then multiplied by an appearance matrix (<b>B</b>) and sent to the decoding function S for RGB color (c) regression.
-                The decoding function S can be a Spherical Harmonic (SH) function or a fully-connected network (FCN).
-            </p> -->
+                The Mobile Robot module takes the images at given viewpoints
+                and the robot locates itself by a motion capture system.
+                During the simulation, Unity Engine renders images at
+                given viewpoints. The 3D Reconstruction module reconstructs
+                a scene by combining an implicit neural representation
+                (e.g. NeRF) and a volumetric representation (A
+                coarse TSDF). The implicit neural representation provides
+                high quality 3D models with fine-grained details and also
+                neural uncertainty as the information gain for the view path
+                planning. The coarse TSDF filter viewpoints and establishes
+                an occupancy grid map for efficient distance and occupancy
+                query, and viewpoint filtering. The View Path Planning
+                module first leverages volumetric representations for efficient
+                viewpoint selection, approximates the information gain field
+                by a MLP and plans an informative view path based the
+                A* algorithm.
+            </p>
         </div>
     </div>
-
+ 
+     
 
 
     </br></br>
     <div class="section">
         <s2>Performance</s2>
         <hr>
-        <!-- <h2 class="grey-heading_nerf">
-                Super Fast Convergence
-        </h2> -->
-       
+        <h2 class="grey-heading_nerf">
+            Comparison of the reconstruction scenes
+        </h2>
+        </br></br>
+        <div class="columns-5 w-row">
+            <img src="img/view_compare.png" style="width:95%; margin-right:0px; margin-top:0px;">
+        </div>
+        <h2 class="grey-heading_nerf">
+            Trajectories and the reconstruction results 
+        </h2>
+        </br></br>
+        <div class="columns-5 w-row">
+            <img src="img/trajectory_compare.png" style="width:60%; margin-right:0px; margin-top:0px;">
+        </div>
+        <p class="paragraph-3 nerf_text">
+            The results are seen from top view in childroom scene. 
+        </p>
+        <h2 class="grey-heading_nerf">
+            The experiment on a real scene 
+        </h2>
+        </br></br>
+        <div class="columns-5 w-row">
+            <img src="img/real_sence_result.png" style="width:95%; margin-right:0px; margin-top:0px;">
+        </div>
+        
+
 
 
         </br></br></br>
